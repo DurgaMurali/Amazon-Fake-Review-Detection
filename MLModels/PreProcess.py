@@ -52,6 +52,10 @@ class PreProcess:
             sentence_tokens = []
             for line in sentences:
                 tokens = (word_tokenize(line))
+                # Remove tokens of length less than 3
+                for token in tokens:
+                    if(len(token) < 3):
+                        tokens.remove(token)
                 sentence_tokens.extend(tokens)
 
             review_tokenize_text.append(sentence_tokens)
@@ -68,7 +72,7 @@ class PreProcess:
             review_removed_stop_words.append(post)
 
 
-    def lemmatize_verbs(self, text_data, review_text_lemmatized):
+    def lemmatize(self, text_data, review_text_lemmatized):
         lemmatizer = WordNetLemmatizer()
         for text in text_data:
             pos_dict = pos_tag(text)
@@ -134,7 +138,7 @@ class PreProcess:
             self.remove_stop_words(review_tokenize_text, review_removed_stop_words)
 
             review_text_lemmatized = []
-            self.lemmatize_verbs(review_removed_stop_words, review_text_lemmatized)
+            self.lemmatize(review_removed_stop_words, review_text_lemmatized)
 
             reviews.append(review_text_lemmatized)
 
@@ -149,7 +153,7 @@ class PreProcess:
         count = 0
         for line in reviews:
             reviewSplit = line.split("-")
-            productId = reviewSplit[0]
+            reviewerId = reviewSplit[0]
             reviewList = reviewSplit[1].strip().split("%#%")
             size = len(reviewList)
             review = reviewList[size-1]
@@ -159,7 +163,7 @@ class PreProcess:
 
             # Consider products that have atleast reviewCount number of reviews
             if(len(reviewList) >= reviewCount):
-                reviewsDict[productId] = reviewList
+                reviewsDict[reviewerId] = reviewList
                 count = count + 1
 
         print(count)
@@ -171,6 +175,5 @@ class PreProcess:
         reviewsDict =  self.readReviewsandFilter(filename, reviewCount)  
         print(len(reviewsDict))
 
-        #print(productReviewsDict['7229002036'])
         self.preprocess_text(reviewsDict)
         return reviewsDict

@@ -4,7 +4,7 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from statistics import mean 
 
 process_reviews = PreProcess.PreProcess()
-userReviewsDict = process_reviews.preprocess('./UserWiseReviews.txt', 25)
+userReviewsDict = process_reviews.preprocess('./UserWiseReviews.txt', 5)
 
 # TextBlob sentiment score
 textblob_sentiment_score = dict()
@@ -47,5 +47,4 @@ for key, value in userReviewsDict.items():
 
     if(average_positive_score > 95):
         print(key, " = ", average_positive_score)
-    
 
